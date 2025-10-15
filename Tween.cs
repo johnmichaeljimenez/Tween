@@ -12,9 +12,9 @@ namespace Tween
 			{ typeof(float), (from, to, amt) => (float)from + ((float)to - (float)from) * amt }
 		};
 
-		public static void RegisterLerper<U>(Func<U, U, float, U> lerper) where U : struct
+		public static void RegisterLerper(Func<T, T, float, T> lerper)
 		{
-			Lerpers[typeof(U)] = (from, to, amt) => lerper((U)from, (U)to, amt);
+			Lerpers[typeof(T)] = (from, to, amt) => lerper((T)from, (T)to, amt);
 		}
 
 		private Func<T> Getter;
