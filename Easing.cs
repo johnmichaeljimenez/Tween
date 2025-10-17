@@ -29,36 +29,25 @@ namespace Tween
             }
         }
 
-        public static float RandomShake(float t)
+        public static EasingFunction RandomShake(float frequency = 10f, float amplitude = 1f)
         {
-            if (t >= 1f) return 0f;
-
-            float envelope = (1 - t) * (4 * t * (1 - t));
-            float frequency = 10f;
-            float amplitude = 1f;
-            float noise = (float)(random.NextDouble() * 2 - 1);
-            float shake = noise * amplitude * envelope;
-
-            return shake;
+            return t =>
+            {
+                if (t >= 1f) return 0f;
+                float envelope = (1 - t) * (4 * t * (1 - t));
+                float noise = (float)(random.NextDouble() * 2 - 1);
+                return noise * amplitude * envelope * frequency / 10f;
+            };
         }
 
         public static float RandomShakeFull(float t)
         {
-            if (t >= 1f) return 0f;
-
-            float envelope = (1 - t) * (4 * t * (1 - t));
-            float frequency = 10f;
-            float amplitude = 2f;
-            float noise = (float)(random.NextDouble() * 2 - 1);
-            float shake = noise * amplitude * envelope;
-
-            return shake;
+            return RandomShake(frequency: 10f, amplitude: 2f)(t);
         }
 
-        public static float ParabolicUp(float t)
+        public static EasingFunction ParabolicUp(float peakHeight = 1.5f)
         {
-            float peakHeight = 1.5f;
-            return -4 * peakHeight * (t - 0.5f) * (t - 0.5f) + peakHeight;
+            return t => -4 * peakHeight * (t - 0.5f) * (t - 0.5f) + peakHeight;
         }
     }
 }
