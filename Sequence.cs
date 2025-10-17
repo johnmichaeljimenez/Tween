@@ -8,9 +8,10 @@ namespace Tween
         private int currentLoop;
         private bool yoyo;
 
-        public Sequence(string id = null)
+        public Sequence(string id = null, bool useUnscaledTime = false)
         {
             Id = id;
+            UseUnscaledTime = useUnscaledTime;
         }
 
         public Sequence Append(TweenBase tween)
@@ -52,7 +53,7 @@ namespace Tween
             }
         }
 
-        public override void Update(float dt)
+        public override void Update(float scaledDt, float unscaledDt)
         {
             if (IsCompleted || IsDisposed || IsPaused) return;
 
@@ -79,7 +80,7 @@ namespace Tween
                 return;
             }
 
-            tweens[currentIndex].Update(dt);
+            tweens[currentIndex].Update(scaledDt, unscaledDt);
             if (tweens[currentIndex].IsCompleted)
             {
                 currentIndex++;

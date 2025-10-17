@@ -24,7 +24,7 @@ namespace Tween
             }
         }
 
-        public static void Update(float dt)
+        public static void Update(float scaledDt, float unscaledDt)
         {
             for (int i = activeTweens.Count - 1; i >= 0; i--)
             {
@@ -38,7 +38,7 @@ namespace Tween
                     continue;
                 }
 
-                activeTweens[i].Update(dt);
+                activeTweens[i].Update(scaledDt, unscaledDt);
                 if (activeTweens[i].IsCompleted)
                 {
                     if (!string.IsNullOrEmpty(activeTweens[i].Id))

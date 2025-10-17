@@ -6,8 +6,9 @@ namespace Tween
         public bool IsDisposed { get; private set; }
         public bool IsPaused { get; private set; }
         public string Id { get; protected set; }
+        public bool UseUnscaledTime { get; set; } = false;
 
-        public abstract void Update(float dt);
+        public abstract void Update(float scaledDt, float unscaledDt);
 
         public virtual void Pause()
         {
