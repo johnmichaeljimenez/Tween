@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Tween
 {
     public class Sequence : TweenBase

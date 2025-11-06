@@ -1,3 +1,5 @@
+using System;
+
 namespace Tween
 {
     public static class Easing

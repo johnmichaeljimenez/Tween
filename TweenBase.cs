@@ -1,3 +1,5 @@
+using System;
+
 namespace Tween
 {
     public abstract class TweenBase : IDisposable
