@@ -6,50 +6,57 @@ namespace Tween
     {
         private static Random random = new Random();
 
-        public static float Linear(float t) => t;
+        public static float Linear(TweenBase t) => t.NormalizedTime;
 
-        public static float QuadIn(float t) => t * t;
+        public static float QuadIn(TweenBase t) => t.NormalizedTime * t.NormalizedTime;
 
-        public static float QuadOut(float t) => t * (2 - t);
+        public static float QuadOut(TweenBase t) => t.NormalizedTime * (2 - t.NormalizedTime);
 
-        public static float QuadInOut(float t)
+        public static float QuadInOut(TweenBase t)
         {
-            if (t < 0.5f) return 2 * t * t;
-            return -1 + (4 - 2 * t) * t;
+            var n = t.NormalizedTime;
+
+            if (n < 0.5f) return 2 * n * n;
+            return -1 + (4 - 2 * n) * n;
         }
 
-        public static float QuadInOutLoop(float t)
+        public static float QuadInOutLoop(TweenBase t)
         {
-            if (t < 0.5f)
+            var n = t.NormalizedTime;
+
+            if (n < 0.5f)
             {
-                return 4 * t * t;
+                return 4 * n * n;
             }
             else
             {
-                float t2 = (t - 0.5f) * 2;
+                float t2 = (n - 0.5f) * 2;
                 return (1 - t2 * (2 - t2));
             }
         }
 
-        public static EasingFunction RandomShake(float frequency = 10f, float amplitude = 1f)
+        public static float RandomShake(TweenBase t)
         {
-            return t =>
-            {
-                if (t >= 1f) return 0f;
-                float envelope = (1 - t) * (4 * t * (1 - t));
-                float noise = (float)(random.NextDouble() * 2 - 1);
-                return noise * amplitude * envelope * frequency / 10f;
-            };
+            var n = t.NormalizedTime;
+
+            //p1 = frequency
+            //p2 = amplitude
+
+            if (n >= 1f) return 0f;
+            float envelope = (1 - n) * (4 * n * (1 - n));
+            float noise = (float)(random.NextDouble() * 2 - 1);
+            return noise * t.Parameter2 * envelope * t.Parameter1;
         }
 
-        public static float RandomShakeFull(float t)
-        {
-            return RandomShake(frequency: 10f, amplitude: 2f)(t);
-        }
+        // public static float RandomShakeFull(TweenBase t)
+        // {
+        //     return RandomShake(frequency: 5f, amplitude: 2f)(t);
+        // }
 
-        public static EasingFunction ParabolicUp(float peakHeight = 1.5f)
+        public static float ParabolicUp(TweenBase t)
         {
-            return t => -4 * peakHeight * (t - 0.5f) * (t - 0.5f) + peakHeight;
+            //p1 = peak height
+            return -4 * t.Parameter1 * (t.NormalizedTime - 0.5f) * (t.NormalizedTime - 0.5f) + t.Parameter1;
         }
     }
 }

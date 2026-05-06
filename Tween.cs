@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Tween
 {
-    public delegate float EasingFunction(float t);
+    public delegate float EasingFunction(TweenBase t);
 
     public class Tween<T> : TweenBase where T : struct
     {
@@ -15,6 +15,17 @@ namespace Tween
         public static void RegisterLerper(Func<T, T, float, T> lerper)
         {
             Lerpers[typeof(T)] = (from, to, amt) => lerper((T)from, (T)to, amt);
+        }
+
+        public override float NormalizedTime
+        {
+            get
+            {
+                if (Duration <= 0) return 1.0f;
+
+                var progress = elapsedTime / Duration;
+                return Math.Clamp(progress, 0f, 1f);
+            }
         }
 
         private Func<T> Getter;
@@ -167,7 +178,7 @@ namespace Tween
                 progress = (float)Math.Floor(progress * steps) / steps;
             }
 
-            float easedProgress = EasingFunc(progress);
+            float easedProgress = EasingFunc(this);
             T currentValue = (T)Lerpers[typeof(T)](From, To, easedProgress);
             Setter(currentValue);
 

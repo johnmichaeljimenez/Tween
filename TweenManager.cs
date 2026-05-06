@@ -86,13 +86,14 @@ namespace Tween
             {
                 if (!string.IsNullOrEmpty(tween.Id) && tween.Id.StartsWith(prefix))
                 {
+                    if (activeTweens.Contains(tween))
+                        activeTweens.Remove(tween);
+
                     tweensById.Remove(tween.Id);
                 }
 
                 tween.Dispose();
             }
-            activeTweens.Clear();
-            tweensById.Clear();
         }
 
         public static void PauseAll()
