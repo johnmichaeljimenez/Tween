@@ -82,19 +82,20 @@ namespace Tween
 
         public static void ClearByPrefix(string prefix)
         {
-            foreach (var tween in activeTweens)
+            for (int i = activeTweens.Count - 1; i >= 0; i--)
             {
+                var tween = activeTweens[i];
+
                 if (!string.IsNullOrEmpty(tween.Id) && tween.Id.StartsWith(prefix))
                 {
-                    if (activeTweens.Contains(tween))
-                        activeTweens.Remove(tween);
-
+                    activeTweens.RemoveAt(i);
                     tweensById.Remove(tween.Id);
-                }
 
-                tween.Dispose();
+                    tween.Dispose();
+                }
             }
         }
+
 
         public static void PauseAll()
         {
