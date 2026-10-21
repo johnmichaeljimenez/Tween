@@ -207,7 +207,7 @@ public sealed class Tween<T> : TweenBase where T : struct
 
         float progress = duration <= 0f ? 1f : Math.Clamp(elapsedTime / duration, 0f, 1f);
         float sampled = steps > 0 ? (float)Math.Floor(progress * steps) / steps : progress;
-        CurrentValue = lerper(from, to, easing(sampled));
+        CurrentValue = Sample(sampled);
         setter(CurrentValue);
         RaiseUpdate();
         if (IsKilled)
@@ -216,7 +216,7 @@ public sealed class Tween<T> : TweenBase where T : struct
         if (progress >= 1f || (isReversed && elapsedTime <= 0f))
         {
             elapsedTime = isReversed ? 0f : duration;
-            CurrentValue = isReversed ? from : to;
+            CurrentValue = Sample(isReversed ? 0f : 1f);
             setter(CurrentValue);
 
             if (LoopCount < 0 || CurrentLoop < LoopCount - 1)
@@ -239,4 +239,6 @@ public sealed class Tween<T> : TweenBase where T : struct
             }
         }
     }
+
+    private T Sample(float normalizedTime) => lerper(from, to, easing(normalizedTime));
 }

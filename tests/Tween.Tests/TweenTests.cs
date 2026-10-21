@@ -40,6 +40,35 @@ public class TweenTests
     }
 
     [Fact]
+    public void CompletionUsesEasedEndpointNotRawTo()
+    {
+        _value = 100f;
+        var tween = CreateTween(to: 108f, duration: 0.3f)
+            .SetFrom(100f)
+            .SetEasing(Easing.Parabola(1f));
+
+        tween.Update(0.15f, 0.15f);
+        Assert.True(_value > 100f, "midpoint should move toward to");
+
+        tween.Update(0.15f, 0.15f);
+        Assert.True(tween.IsComplete);
+        Assert.Equal(100f, _value, 4);
+    }
+
+    [Fact]
+    public void ShakeCompletionReturnsToFrom()
+    {
+        _value = 50f;
+        var tween = CreateTween(to: 58f, duration: 0.2f)
+            .SetFrom(50f)
+            .SetEasing(Easing.Shake(20f, 1f));
+
+        tween.Update(0.2f, 0.2f);
+        Assert.True(tween.IsComplete);
+        Assert.Equal(50f, _value, 4);
+    }
+
+    [Fact]
     public void StepsQuantizeProgress()
     {
         var tween = CreateTween().SetSteps(2);
