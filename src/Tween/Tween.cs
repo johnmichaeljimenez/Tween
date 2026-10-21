@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Tween;
+namespace TweenLib;
 
 public static class Tween
 {

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using Xunit;
 
-namespace Tween.Tests;
+namespace TweenLib.Tests;
 
 public class EasingTests
 {

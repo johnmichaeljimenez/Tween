@@ -1,6 +1,6 @@
 using System;
 
-namespace Tween;
+namespace TweenLib;
 
 internal sealed class Interval : TweenBase
 {

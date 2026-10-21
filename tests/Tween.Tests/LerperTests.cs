@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace Tween.Tests;
+namespace TweenLib.Tests;
 
 public class LerperTests
 {

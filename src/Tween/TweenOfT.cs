@@ -1,6 +1,6 @@
 using System;
 
-namespace Tween;
+namespace TweenLib;
 
 public sealed class Tween<T> : TweenBase where T : struct
 {
