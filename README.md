@@ -90,9 +90,26 @@ Useful controls on any tween:
 | `Pause()` / `Resume()` | Freeze or continue |
 | `Reverse()` | Play backward from the current point |
 | `Kill()` | Stop and remove from the manager |
+| `SetLink(() => target != null)` | Auto-kill when the predicate becomes false (Unity-safe target guard) |
 | `UseUnscaledTime` | Use the unscaled delta instead of scaled |
 | `IsComplete` / `IsPaused` / `IsKilled` | State flags |
 | `NormalizedTime` | Progress from 0 to 1 |
+
+### Unity destroyed objects
+
+Ongoing tweens keep calling your getter/setter each frame. If the `MonoBehaviour` / `Transform` / `GameObject` they close over is destroyed, those callbacks can throw (`MissingReferenceException`).
+
+Because this package is pure C# (`noEngineReferences`), it cannot special-case `UnityEngine.Object`. Use **`SetLink`** with a predicate that runs Unity's overloaded null check in *your* code:
+
+```csharp
+Tween.To(() => transform.localScale, v => transform.localScale = v, Vector3.one, 0.4f)
+    .SetLink(() => this != null)   // or () => gameObject != null / () => target != null
+    .SetEasing(Easing.BackOut);
+```
+
+When the predicate returns `false`, the tween is **killed**, removed from `TweenManager`, and `OnKill` runs — before the next getter/setter call.
+
+`SetLink` also works on sequences. Child tweens can have their own links independently.
 
 Loop count notes:
 

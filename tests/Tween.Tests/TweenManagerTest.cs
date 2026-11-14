@@ -110,4 +110,44 @@ public class TweenManagerTests : IDisposable
         tween.Kill();
         Assert.Throws<ArgumentException>(() => TweenManager.Add(tween));
     }
+
+    [Fact]
+    public void FailedLinkRemovesTweenFromManager()
+    {
+        bool alive = true;
+        var tween = Tween.To(() => _value, v => _value = v, 10f, 1f).SetLink(() => alive);
+        Assert.Equal(1, TweenManager.ActiveCount);
+
+        TweenManager.Update(0.25f, 0.25f);
+        Assert.Equal(1, TweenManager.ActiveCount);
+
+        alive = false;
+        TweenManager.Update(0.25f, 0.25f);
+
+        Assert.True(tween.IsKilled);
+        Assert.Equal(0, TweenManager.ActiveCount);
+    }
+
+    [Fact]
+    public void FailedSequenceLinkKillsChildrenAndDetaches()
+    {
+        bool alive = true;
+        int childKills = 0;
+        var child = new Tween<float>(() => _value, v => _value = v, 10f, 1f)
+            .OnKill(() => childKills++);
+        var sequence = Tween.Sequence()
+            .Append(child)
+            .SetLink(() => alive);
+
+        TweenManager.Update(0.25f, 0.25f);
+        Assert.Equal(2.5f, _value, 4);
+
+        alive = false;
+        TweenManager.Update(0.25f, 0.25f);
+
+        Assert.True(sequence.IsKilled);
+        Assert.True(child.IsKilled);
+        Assert.Equal(1, childKills);
+        Assert.Equal(0, TweenManager.ActiveCount);
+    }
 }

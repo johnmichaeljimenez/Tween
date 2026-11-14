@@ -58,6 +58,12 @@ namespace TweenLib
             return this;
         }
 
+        public new Sequence SetLink(Func<bool> isAlive)
+        {
+            base.SetLink(isAlive);
+            return this;
+        }
+
         public Sequence Append(TweenBase tween)
         {
             if (tween == null)
@@ -121,7 +127,7 @@ namespace TweenLib
 
         public override void Update(float deltaTime, float unscaledDeltaTime)
         {
-            if (IsComplete || IsKilled || IsPaused)
+            if (!CanUpdate())
                 return;
 
             if (children.Count == 0)

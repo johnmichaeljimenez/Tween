@@ -89,6 +89,12 @@ namespace TweenLib
             return this;
         }
 
+        public new Tween<T> SetLink(Func<bool> isAlive)
+        {
+            base.SetLink(isAlive);
+            return this;
+        }
+
         public Tween<T> SetFrom(T value)
         {
             hasCustomFrom = true;
@@ -157,7 +163,7 @@ namespace TweenLib
 
         public override void Update(float deltaTime, float unscaledDeltaTime)
         {
-            if (IsComplete || IsKilled || IsPaused)
+            if (!CanUpdate())
                 return;
 
             float dt = UseUnscaledTime ? unscaledDeltaTime : deltaTime;

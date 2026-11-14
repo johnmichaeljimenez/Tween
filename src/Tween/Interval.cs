@@ -37,7 +37,7 @@ namespace TweenLib
 
         public override void Update(float deltaTime, float unscaledDeltaTime)
         {
-            if (IsComplete || IsKilled || IsPaused)
+            if (!CanUpdate())
                 return;
 
             if (!hasStarted)

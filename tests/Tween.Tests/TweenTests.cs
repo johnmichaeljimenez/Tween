@@ -192,6 +192,54 @@ public class TweenTests
     }
 
     [Fact]
+    public void SetLinkKeepsTweenAliveWhilePredicateIsTrue()
+    {
+        bool alive = true;
+        var tween = CreateTween().SetLink(() => alive);
+
+        tween.Update(0.5f, 0.5f);
+        Assert.Equal(5f, _value, 4);
+        Assert.False(tween.IsKilled);
+    }
+
+    [Fact]
+    public void SetLinkKillsTweenWhenPredicateBecomesFalse()
+    {
+        bool alive = true;
+        int kills = 0;
+        int setterCalls = 0;
+        var tween = new Tween<float>(
+                () => _value,
+                v =>
+                {
+                    setterCalls++;
+                    _value = v;
+                },
+                10f,
+                1f)
+            .SetLink(() => alive)
+            .OnKill(() => kills++);
+
+        tween.Update(0.5f, 0.5f);
+        Assert.Equal(5f, _value, 4);
+        int settersBeforeKill = setterCalls;
+
+        alive = false;
+        tween.Update(0.5f, 0.5f);
+
+        Assert.True(tween.IsKilled);
+        Assert.Equal(1, kills);
+        Assert.Equal(5f, _value, 4);
+        Assert.Equal(settersBeforeKill, setterCalls);
+    }
+
+    [Fact]
+    public void SetLinkRejectsNullPredicate()
+    {
+        Assert.Throws<ArgumentNullException>(() => CreateTween().SetLink(null!));
+    }
+
+    [Fact]
     public void UsesUnscaledTimeWhenRequested()
     {
         var tween = CreateTween();

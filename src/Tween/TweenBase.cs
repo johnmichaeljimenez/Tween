@@ -8,6 +8,7 @@ namespace TweenLib
         private Action? onUpdate;
         private Action? onComplete;
         private Action? onKill;
+        private Func<bool>? link;
 
         public string? Id { get; private set; }
         public bool IsComplete { get; protected set; }
@@ -38,6 +39,18 @@ namespace TweenLib
 
             LoopCount = count;
             Yoyo = yoyo;
+            return this;
+        }
+
+        /// <summary>
+        /// Keeps this tween alive while <paramref name="isAlive"/> returns true.
+        /// When it returns false (for example a Unity object became destroyed), the tween is killed and removed.
+        /// Use a predicate so Unity's overloaded null check runs inside the caller's assembly:
+        /// <c>SetLink(() =&gt; target != null)</c>.
+        /// </summary>
+        public TweenBase SetLink(Func<bool> isAlive)
+        {
+            link = isAlive ?? throw new ArgumentNullException(nameof(isAlive));
             return this;
         }
 
@@ -85,6 +98,25 @@ namespace TweenLib
             onUpdate = null;
             onComplete = null;
             onKill = null;
+            link = null;
+        }
+
+        /// <summary>
+        /// Shared gate for all <see cref="Update"/> implementations: stopped/paused tweens skip work;
+        /// a failed link kills the tween.
+        /// </summary>
+        protected bool CanUpdate()
+        {
+            if (IsComplete || IsKilled || IsPaused)
+                return false;
+
+            if (link != null && !link())
+            {
+                Kill();
+                return false;
+            }
+
+            return true;
         }
 
         protected void RaiseStart() => onStart?.Invoke();
