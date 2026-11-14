@@ -80,6 +80,10 @@ StyleCopReport.xml
 *_h.h
 *.ilk
 *.meta
+
+#unity meta files
+!src/Tween/**/*.meta
+
 *.obj
 *.iobj
 *.pch
