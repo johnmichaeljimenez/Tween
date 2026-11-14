@@ -1,12 +1,56 @@
 # Tween
 
-A small .NET tweening library. Animate values over time with easing, loops, sequences, and a central manager.
+A small tweening library for **.NET 8** and **Unity 2022.3+**. Animate values over time with easing, loops, sequences, and a central manager.
 
-**Target:** .NET 8
+**Targets:** `net8.0` + `netstandard2.1` (Unity 2021.2+ / 2022 LTS)
+
+## Install
+
+### .NET (apps, libraries)
+
+Project reference:
+
+```xml
+<ProjectReference Include="..\Tween\src\Tween\Tween.csproj" />
+```
+
+Or build/pack the project and reference the `TweenLib` package / `TweenLib.dll`.
+
+```bash
+dotnet build src/Tween/Tween.csproj
+dotnet pack src/Tween/Tween.csproj -c Release
+```
+
+### Unity 2022.3+
+
+This repo is a dual package. Unity consumes **`src/Tween`** as a UPM package (source + `package.json` + `TweenLib.asmdef`).
+
+**Git URL** (path to the package folder):
+
+```
+https://github.com/johnmichaeljimenez/Tween.git?path=/src/Tween
+```
+
+**Local** — Package Manager → Add package from disk → select `src/Tween/package.json`.
+
+The assembly is pure C# (`noEngineReferences`), so it does not depend on `UnityEngine`. Drive it from a `MonoBehaviour`/`PlayerLoop` update:
+
+```csharp
+void Update()
+{
+    TweenLib.TweenManager.Update(Time.deltaTime, Time.unscaledDeltaTime);
+}
+```
+
+Register Unity types once at startup if you tween them:
+
+```csharp
+TweenLib.Lerper.Register<Vector3>((from, to, t) => Vector3.LerpUnclamped(from, to, t));
+TweenLib.Lerper.Register<Quaternion>((from, to, t) => Quaternion.SlerpUnclamped(from, to, t));
+TweenLib.Lerper.Register<Color>((from, to, t) => Color.LerpUnclamped(from, to, t));
+```
 
 ## Quick start
-
-Reference the project, then drive everything from your game/app loop:
 
 ```csharp
 // Once per frame
@@ -147,9 +191,23 @@ dotnet build src/Tween/Tween.csproj
 dotnet test tests/Tween.Tests/Tween.Tests.csproj
 ```
 
+Both `netstandard2.1` and `net8.0` are built from the same sources (C# 9 so Unity 2022 can compile the UPM package).
+
 ## Layout
 
 ```
-src/Tween/          library
+src/Tween/          library (.NET multi-target + Unity UPM package)
+  Tween.csproj      netstandard2.1;net8.0
+  package.json      Unity package manifest
+  TweenLib.asmdef   Unity assembly definition
 tests/Tween.Tests/  xUnit tests
 ```
+
+## Compatibility notes
+
+| Surface | Support |
+|---|---|
+| `net8.0` | ProjectReference or NuGet |
+| Unity 2022.3 LTS | UPM source package under `src/Tween` |
+| API profile | `netstandard2.1` (no .NET 6+ only APIs in the shared path) |
+| Language | C# 9 (Unity 2022 default) |

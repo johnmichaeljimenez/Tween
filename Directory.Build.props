@@ -1,0 +1,11 @@
+<Project>
+  <!--
+    Keep bin/obj outside src/Tween so Unity UPM (which imports the whole package folder)
+    does not compile MSBuild AssemblyInfo.cs or pick up prebuilt TweenLib.dll.
+    Must live in Directory.Build.props (NETSDK1199) — not the csproj.
+  -->
+  <PropertyGroup>
+    <UseArtifactsOutput>true</UseArtifactsOutput>
+    <ArtifactsPath>$(MSBuildThisFileDirectory)artifacts</ArtifactsPath>
+  </PropertyGroup>
+</Project>

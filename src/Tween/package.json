@@ -1,0 +1,18 @@
+{
+  "name": "com.johnmichaeljimenez.tween",
+  "version": "1.0.0",
+  "displayName": "Tween",
+  "description": "A small tweening library. Animate values over time with easing, loops, sequences, and a central manager.",
+  "unity": "2022.3",
+  "documentationUrl": "https://github.com/johnmichaeljimenez/Tween",
+  "licensesUrl": "https://github.com/johnmichaeljimenez/Tween",
+  "keywords": [
+    "tween",
+    "animation",
+    "easing",
+    "sequence"
+  ],
+  "author": {
+    "name": "John Jimenez"
+  }
+}
