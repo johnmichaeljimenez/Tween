@@ -1,30 +1,31 @@
 using System;
 
-namespace TweenLib;
-
-internal sealed class CallbackAction : TweenBase
+namespace TweenLib
 {
-    private readonly Action action;
-
-    public CallbackAction(Action action)
+    internal sealed class CallbackAction : TweenBase
     {
-        this.action = action ?? throw new ArgumentNullException(nameof(action));
-    }
+        private readonly Action action;
 
-    public override float NormalizedTime => 1f;
+        public CallbackAction(Action action)
+        {
+            this.action = action ?? throw new ArgumentNullException(nameof(action));
+        }
 
-    public override void Reverse() => IsComplete = false;
+        public override float NormalizedTime => 1f;
 
-    internal override void Restart() => IsComplete = false;
+        public override void Reverse() => IsComplete = false;
 
-    public override void Update(float deltaTime, float unscaledDeltaTime)
-    {
-        if (IsComplete || IsKilled || IsPaused)
-            return;
+        internal override void Restart() => IsComplete = false;
 
-        IsComplete = true;
-        RaiseStart();
-        action();
-        RaiseComplete();
+        public override void Update(float deltaTime, float unscaledDeltaTime)
+        {
+            if (IsComplete || IsKilled || IsPaused)
+                return;
+
+            IsComplete = true;
+            RaiseStart();
+            action();
+            RaiseComplete();
+        }
     }
 }

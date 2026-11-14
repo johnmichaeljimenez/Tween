@@ -1,20 +1,21 @@
-﻿using System;
+using System;
 
-namespace TweenLib;
-
-public static class Tween
+namespace TweenLib
 {
-    public static Tween<T> To<T>(Func<T> getter, Action<T> setter, T to, float duration) where T : struct
+    public static class Tween
     {
-        var tween = new Tween<T>(getter, setter, to, duration);
-        TweenManager.Add(tween);
-        return tween;
-    }
+        public static Tween<T> To<T>(Func<T> getter, Action<T> setter, T to, float duration) where T : struct
+        {
+            var tween = new Tween<T>(getter, setter, to, duration);
+            TweenManager.Add(tween);
+            return tween;
+        }
 
-    public static Sequence Sequence()
-    {
-        var sequence = new Sequence();
-        TweenManager.Add(sequence);
-        return sequence;
+        public static Sequence Sequence()
+        {
+            var sequence = new Sequence();
+            TweenManager.Add(sequence);
+            return sequence;
+        }
     }
 }

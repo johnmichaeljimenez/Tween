@@ -1,8 +1,22 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
+    <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
+    <RootNamespace>TweenLib</RootNamespace>
+    <AssemblyName>TweenLib</AssemblyName>
+    <IsPackable>true</IsPackable>
+    <PackageId>TweenLib</PackageId>
+    <Description>A small tweening library for .NET and Unity.</Description>
   </PropertyGroup>
 
+
+
+  <ItemGroup>
+    <None Include="package.json" Pack="false" />
+    <None Include="TweenLib.asmdef" Pack="false" />
+  </ItemGroup>
+
 </Project>
+
